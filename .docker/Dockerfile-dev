@@ -1,0 +1,12 @@
+FROM php:7.2-apache
+
+MAINTAINER Ador Jao
+
+COPY . /srv/src
+COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+
+WORKDIR /srv/src
+
+RUN chown -R www-data:www-data /srv/src
+
+EXPOSE 80
