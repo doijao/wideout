@@ -7,9 +7,10 @@ class RemoteRequest
 {
     protected $glob;
 
-    public function __construct() {
+    public function __construct()
+    {
         global $config;
-        $this->glob =& $config; 
+        $this->glob =& $config;
     }
 
     public function getURLData(string $url) : void

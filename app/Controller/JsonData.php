@@ -12,18 +12,17 @@ class JsonData
     public function __construct(array $object)
     {
         global $config;
-        $this->glob =& $config; 
+        $this->glob =& $config;
 
         $i = 0;
         
         foreach ($object['skus'] as $rows) {
             foreach ($rows as $key => $value) {
                 if ($this->filterCategories($rows['mCategories']) === false) {
-                    if ($this->filterColumn($key)) {
-                        if (!$this->filterProduct($rows['mBrand'], 'Apple')) {
-                            $rows['skuDisplayName'] = $this->filterColor($rows['skuDisplayName']);
-                       
-                            $this->results[$i][$key] = $rows[$key];
+                    if (!$this->filterProduct($rows['mBrand'], 'Apple')) {
+                        $rows['skuDisplayName'] = $this->filterColor($rows['skuDisplayName']);
+                        foreach ($this->glob['excludeColumns'] as $column) {
+                            $this->results[$i][$column] = $rows[$column];
                         }
                     }
                 }
@@ -37,15 +36,6 @@ class JsonData
         } else {
             echo "--> Failed to filter data <br />";
         }
-    }
-
-    private function filterColumn(string $column) : bool
-    {
-        if (in_array($column, $this->glob['excludeColumns'])) {
-            return true;
-        }
-      
-        return false;
     }
 
     private function filterProduct(string $str, string $value) : bool
