@@ -5,68 +5,25 @@ namespace App\Controller;
 
 class RemoteRequest
 {
-    protected $glob;
+    private $url_source;
     
-    private $url;
-    
-    public function __construct(string $url)
+    private $path_destination;
+
+    public function __construct(string $url_source, string $path_destination)
     {
-        global $config;
-        $this->glob =& $config;
-        $this->url = $url;
+        $this->url_source       =   $url_source;
+        $this->path_destination =   $path_destination;
         $this->getURLData();
     }
 
     // Download data
     public function getURLData() : void
     {
-        if ($this->download($this->getUrlForParsing($this->url), $this->glob['tempFile'])) {
+        if ($this->download($this->getUrlForParsing($this->url_source), $this->path_destination)) {
             echo "--> Downloaded json data successfully. <br />";
         } else {
             echo "--> Failed to download json data. <br />";
         }
-    }
-
-    public function ftpFile() : void
-    {
-        $filename = $this->glob['filename'];
-        
-        if (!file_exists($filename)) {
-            die("Terminated: Can't find " . $filename);
-        }
-        //-- Connection Settings
-        $ftp_server = $this->glob['ftp']['host'];
-
-        $ftp_user_name = $this->glob['ftp']['username'];
-        
-        $ftp_user_pass = $this->glob['ftp']['password'];
-        //where you want to throw the file on the webserver (relative to your login dir)
-        $destination_file = "/";
-        // set up basic connection
-        $conn_id = ftp_connect($ftp_server) or die("Couldn't connect to $ftp_server");
-        // login with username and password, or give invalid user message
-        $login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass)
-            or die("You do not have access to this ftp server!");
-        // check connection
-        if ((!$conn_id) || (!$login_result)) {
-            // wont ever hit this, b/c of the die call on ftp_login
-            echo "--> FTP connection has failed! <br />";
-            echo "--> Attempted to connect to $ftp_server for user $ftp_user_name <br />";
-            exit;
-        }
-
-        ftp_pasv($conn_id, true);
-        // upload the file
-        $upload = ftp_put($conn_id, $filename, $filename, FTP_BINARY);
-        // check upload status
-        if (!$upload) {
-            echo "--> FTP upload of $filename has failed! <br />";
-        } else {
-            echo "--> Uploading $filename Completed Successfully!<br />";
-        }
-        
-        // close the FTP stream
-        ftp_close($conn_id);
     }
 
     // Stream data and write to local machine
@@ -93,17 +50,17 @@ class RemoteRequest
     }
 
     // Checks if URL is valid
-    private function getUrlForParsing(string $url) : string
+    private function getUrlForParsing() : string
     {
-        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        if (filter_var($this->url_source, FILTER_VALIDATE_URL) === false) {
             die('Not a valid URL');
         }
 
-        return $url;
+        return $this->url_source;
     }
 
     // Read json file
-    public function getLocalFile(string $pathFile): array
+    public function readJSONFile(string $pathFile): array
     {
         if (!file_exists($pathFile)) {
             die("Terminated: Can't find " . $pathFile);

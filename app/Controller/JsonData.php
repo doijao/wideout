@@ -5,14 +5,16 @@ namespace App\Controller;
 
 class JsonData
 {
-    protected $glob;
+    protected $include_columns;
+
+    protected $exclude_categories;
 
     public $results;
                         
-    public function __construct(array $object)
+    public function __construct(array $object, array $include_columns, array $exclude_categories)
     {
-        global $config;
-        $this->glob =& $config;
+        $this->include_columns      =   $include_columns;
+        $this->exclude_categories   =   $exclude_categories;
 
         $i = 0;
         foreach ($object['skus'] as $rows) {
@@ -24,7 +26,7 @@ class JsonData
                         // Remove text colors
                         $rows['skuDisplayName'] = $this->filterColor($rows['skuDisplayName']);
                         // Get selected columns only
-                        foreach ($this->glob['includeColumns'] as $column) {
+                        foreach ($this->include_columns as $column) {
                             $this->results[$i][$column] = $rows[$column];
                         }
                     }
@@ -59,7 +61,7 @@ class JsonData
     // Returns TRUE if the value exist in excluded category list
     private function filterCategories($toMatch) : bool
     {
-        $excludes = array_map('strtoupper', $this->glob['excludeCategory']);
+        $excludes = array_map('strtoupper', $this->exclude_categories);
         foreach ($excludes as $exclude) {
             if (in_array($exclude, $toMatch)) {
                 return true;

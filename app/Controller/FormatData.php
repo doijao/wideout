@@ -5,24 +5,22 @@ namespace App\Controller;
 
 class FormatData
 {
-    protected $glob;
-
     private $rawData;
 
-    public function __construct(array $rawData)
+    private $path_destination;
+
+    public function __construct(array $rawData, string $path_destination)
     {
-        global $config;
-        $this->glob =& $config;
-        $this->rawData = $rawData;
+        $this->rawData              =   $rawData;
+        $this->path_destination     =   $path_destination;
         $this->toCommaDelimiter();
     }
     
     // Split data by comma delimited and export to a file.
     public function toCommaDelimiter() : void
     {
-        $fileName = $this->glob['filename'];
         //Open file pointer.
-        $fp = fopen($fileName, 'w');
+        $fp = fopen($this->path_destination, 'w');
 
         foreach ($this->rawData as $key => $item) {
             fputcsv($fp, $item);
@@ -31,6 +29,6 @@ class FormatData
         //Finally, close the file pointer.
         fclose($fp);
 
-        echo "--> Saving $fileName <br />";
+        echo "--> Saving $this->path_destination <br />";
     }
 }
