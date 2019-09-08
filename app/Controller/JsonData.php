@@ -15,19 +15,21 @@ class JsonData
         $this->glob =& $config;
 
         $i = 0;
-        
         foreach ($object['skus'] as $rows) {
             foreach ($rows as $key => $value) {
+                // Ignore other categories
                 if ($this->filterCategories($rows['mCategories']) === false) {
+                    // Ignore Apple brand
                     if (!$this->filterProduct($rows['mBrand'], 'Apple')) {
+                        // Remove text colors
                         $rows['skuDisplayName'] = $this->filterColor($rows['skuDisplayName']);
-                        foreach ($this->glob['excludeColumns'] as $column) {
+                        // Get selected columns only
+                        foreach ($this->glob['includeColumns'] as $column) {
                             $this->results[$i][$column] = $rows[$column];
                         }
                     }
                 }
             }
-            
             $i++;
         }
         
@@ -38,6 +40,7 @@ class JsonData
         }
     }
 
+    // Returns TRUE if the column has the expected value
     private function filterProduct(string $str, string $value) : bool
     {
         if (strcasecmp($str, $value) === 0) {
@@ -47,12 +50,13 @@ class JsonData
         return false;
     }
 
+    // Remove last words that starts with "-"
     private function filterColor(string $str) : string
     {
         return preg_replace('/-[^-]*$/', '', $str);
     }
 
-
+    // Returns TRUE if the value exist in excluded category list
     private function filterCategories($toMatch) : bool
     {
         $excludes = array_map('strtoupper', $this->glob['excludeCategory']);
@@ -62,18 +66,5 @@ class JsonData
             }
         }
         return false;
-    }
-
-    public static function camelCase($str, array $noStrip = [])
-    {
-        // non-alpha and non-numeric characters become spaces
-        $str = preg_replace('/[^a-z0-9' . implode("", $noStrip) . ']+/i', ' ', $str);
-        $str = trim($str);
-        // uppercase the first character of each word
-        $str = ucwords($str);
-        $str = str_replace(" ", "", $str);
-        $str = lcfirst($str);
-
-        return $str;
     }
 }

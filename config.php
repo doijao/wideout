@@ -9,7 +9,7 @@ return [
 		'username'	=>	'WideOut',
 		'password'	=>	'WideOut',
 	],
-	'excludeColumns' => [
+	'includeColumns' => [
 		'mBrand',
 		'skuDisplayName',
 		'mPrice',

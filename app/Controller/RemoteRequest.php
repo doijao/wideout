@@ -17,6 +17,7 @@ class RemoteRequest
         $this->getURLData();
     }
 
+    // Download data
     public function getURLData() : void
     {
         if ($this->download($this->getUrlForParsing($this->url), $this->glob['tempFile'])) {
@@ -68,7 +69,7 @@ class RemoteRequest
         ftp_close($conn_id);
     }
 
-
+    // Stream data and write to local machine
     private function download($file_source, $file_target) : bool
     {
         $rh = fopen($file_source, 'rb');
@@ -91,6 +92,7 @@ class RemoteRequest
         return true;
     }
 
+    // Checks if URL is valid
     private function getUrlForParsing(string $url) : string
     {
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
@@ -100,6 +102,7 @@ class RemoteRequest
         return $url;
     }
 
+    // Read json file
     public function getLocalFile(string $pathFile): array
     {
         if (!file_exists($pathFile)) {

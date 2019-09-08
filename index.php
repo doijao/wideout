@@ -15,11 +15,11 @@ $url = $config['jsonURL'];
 $filePath =  __DIR__ .'/'.$config['tempFile'];
 // Download data from URL
 $request = new RemoteRequest($url);
-// Read JSON file
+// Read and analyze JSON file
 $rawData = $request->getLocalFile($filePath);
-// Convert JSON to array
+// Convert JSON to array then parse data
 $filteredData = new JsonData($rawData);
-// Transform to comma delimited
+// Export data to comma delimited format
 $stream = new FormatData($filteredData->results);
 // Transfer file to FTP
 $request->ftpFile();

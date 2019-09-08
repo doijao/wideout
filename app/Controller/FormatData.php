@@ -16,7 +16,8 @@ class FormatData
         $this->rawData = $rawData;
         $this->toCommaDelimiter();
     }
-
+    
+    // Split data by comma delimited and export to a file.
     public function toCommaDelimiter() : void
     {
         $fileName = $this->glob['filename'];
