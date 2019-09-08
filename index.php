@@ -11,12 +11,15 @@ use App\Controller\JsonData;
 
 use App\Controller\FormatData;
 
-$request = new RemoteRequest();
 $url = $config['jsonURL'];
-$request->getURLData($url);
 $filePath =  __DIR__ .'/'.$config['tempFile'];
+// Download data from URL
+$request = new RemoteRequest($url);
+// Read JSON file
 $rawData = $request->getLocalFile($filePath);
+// Convert JSON to array
 $filteredData = new JsonData($rawData);
-$stream = new FormatData();
-$stream->toCommaDelimiter($filteredData->results);
+// Transform to comma delimited
+$stream = new FormatData($filteredData->results);
+// Transfer file to FTP
 $request->ftpFile();

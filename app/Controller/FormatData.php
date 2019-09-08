@@ -7,19 +7,23 @@ class FormatData
 {
     protected $glob;
 
-    public function __construct()
+    private $rawData;
+
+    public function __construct(array $rawData)
     {
         global $config;
         $this->glob =& $config;
+        $this->rawData = $rawData;
+        $this->toCommaDelimiter();
     }
 
-    public function toCommaDelimiter($rawData) : void
+    public function toCommaDelimiter() : void
     {
         $fileName = $this->glob['filename'];
         //Open file pointer.
         $fp = fopen($fileName, 'w');
 
-        foreach ($rawData as $key => $item) {
+        foreach ($this->rawData as $key => $item) {
             fputcsv($fp, $item);
         }
 

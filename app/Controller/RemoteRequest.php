@@ -6,16 +6,20 @@ namespace App\Controller;
 class RemoteRequest
 {
     protected $glob;
-
-    public function __construct()
+    
+    private $url;
+    
+    public function __construct(string $url)
     {
         global $config;
         $this->glob =& $config;
+        $this->url = $url;
+        $this->getURLData();
     }
 
-    public function getURLData(string $url) : void
+    public function getURLData() : void
     {
-        if ($this->download($this->getUrlForParsing($url), $this->glob['tempFile'])) {
+        if ($this->download($this->getUrlForParsing($this->url), $this->glob['tempFile'])) {
             echo "--> Downloaded json data successfully. <br />";
         } else {
             echo "--> Failed to download json data. <br />";
