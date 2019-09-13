@@ -6,9 +6,11 @@ use PHPUnit\Framework\TestCase;
 
 use App\Controller\RemoteRequest;
 
-use App\Controller\JsonData;
+use App\Controller\ReadJson;
 
 use App\Controller\FormatData;
+
+use App\Controller\FtpClient;
 
 class RequestTest extends TestCase {
     /**
@@ -16,15 +18,14 @@ class RequestTest extends TestCase {
      */
     public function ReadFile() {
         
-        $request = new RemoteRequest();
-        $url = 'https://www.att.com/services/catalogservice/devices?includeFilters=skuState=active&mode=productList';
-        $request->getURLData($url);           
-        $filePath = __DIR__.'/data/productList.json'; 
-        $rawData = $request->getLocalFile($filePath);
-        $filteredData = new JsonData($rawData); 
-        $stream = new FormatData();
-        $stream->toCommaDelimiter($filteredData->results);
-        $request->ftpFile();
+        $config = include('config.php');
+        new RemoteRequest($config['jsonURL'], $config['tempFile']);
+        $filteredData = new ReadJson($config['tempFile'], $config['includeColumns'], $config['excludeCategories']);
+        //print_r($filteredData);
+        assert(1, 1);
+        new FormatData($filteredData->results, $config['filename']);
+        //$connect = new FtpClient($config['ftp']['host'], $config['ftp']['username'], $config['ftp']['password']);
+        //$connect->uploadFile($config['filename']);
     }
     
 }

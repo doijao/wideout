@@ -30,7 +30,6 @@ class FtpClient
         }
 
         $this->connectFTPClient();
-        
     }
 
     // Initialize FTP connection

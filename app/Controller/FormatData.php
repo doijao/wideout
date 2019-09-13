@@ -17,7 +17,7 @@ class FormatData
     }
     
     // Split data by comma delimited and export to a file.
-    public function toCommaDelimiter() : void
+    private function toCommaDelimiter() : void
     {
         //Open file pointer.
         $fp = fopen($this->path_destination, 'w');

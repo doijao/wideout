@@ -17,7 +17,7 @@ class RemoteRequest
     }
 
     // Download data
-    public function getURLData() : void
+    private function getURLData() : void
     {
         if ($this->download($this->getUrlForParsing($this->url_source), $this->path_destination)) {
             echo "--> Downloaded json data successfully. <br />";
@@ -57,25 +57,5 @@ class RemoteRequest
         }
 
         return $this->url_source;
-    }
-
-    // Read json file
-    public function readJSONFile(string $pathFile): array
-    {
-        if (!file_exists($pathFile)) {
-            die("Terminated: Can't find " . $pathFile);
-        }
-
-        $contents = file_get_contents($pathFile);
-
-        $toArray = json_decode($contents, true);
-       
-        if (empty($toArray['status'])) {
-            die("Terminated: We didn't find content in the file.");
-        }
-
-        echo "--> Analyzing json file. <br />";
-
-        return $toArray;
     }
 }

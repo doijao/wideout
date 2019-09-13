@@ -3,7 +3,7 @@
 return [
 
     'jsonURL' => 'https://www.att.com/services/catalogservice/devices?includeFilters=skuState=active&mode=productList',
-    'tempFile' => 'test/data/productList.json',
+    'tempFile' => __DIR__ .'/test/data/productList.json',
 	'ftp' => [
 		'host' 		=> 	'flashtalking.exavault.com',
 		'username'	=>	'WideOut',
@@ -29,7 +29,7 @@ return [
 		'mDueToday',
 		'PDPPageURL'
 	],
-	'excludeCategory'	=>	[
+	'excludeCategories'	=>	[
 		'SMARTPHONES',
 		'WEARABLES',
 		'M-CAT-TABLETS'
